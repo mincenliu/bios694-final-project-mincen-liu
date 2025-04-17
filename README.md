@@ -1,2 +1,2 @@
-# bios694-final-project-mincen-liu
+# BIOS 694 Final Project
  
