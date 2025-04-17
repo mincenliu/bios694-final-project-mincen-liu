@@ -1,0 +1,149 @@
+---
+title: "BIOS 694 Final Project - Teacher Model"
+output: pdf_document
+date: "2025-04-17"
+---
+
+```{r}
+library(torch)
+library(torchvision)
+library(luz)
+library(reshape2)
+library(ggplot2)
+library(dplyr)
+library(tibble)
+library(caret)
+library(here)
+```
+
+## MNIST dataset
+```{r}
+torch_manual_seed(42)
+dir <- "./dataset/mnist"
+
+train_ds <- mnist_dataset(
+  dir,
+  download = TRUE,
+  transform = transform_to_tensor
+)
+
+test_ds <- mnist_dataset(
+  dir,
+  train = FALSE,
+  transform = transform_to_tensor
+)
+
+train_dl <- dataloader(train_ds, batch_size = 128, shuffle = TRUE)
+test_dl <- dataloader(test_ds, batch_size = 128)
+```
+
+```{r}
+length(train_ds)
+length(test_ds)
+```
+
+```{r}
+# An example image
+image <- train_ds$data[1, 1:28, 1:28]
+label <- train_ds$targets[1] - 1 # Targets are 1-10 but should be 0-9
+image_df <- melt(image)
+ggplot(image_df, aes(x = Var2, y = Var1, fill = value))+
+  geom_tile(show.legend = FALSE) + 
+  xlab("") + ylab("") +
+  scale_fill_gradient(low="white", high="black") +
+  ggtitle(paste("Label:", label)) +
+  scale_y_reverse()
+```
+
+
+
+## Teacher model
+### Define the Teacher model
+```{r}
+TeacherNet <- nn_module(
+  "TeacherNet",
+  
+  initialize = function(T = 1) {
+    self$T <- T  # Temperature
+    self$conv1 <- nn_conv2d(1, 32, kernel_size = 3, padding = 1)
+    self$conv2 <- nn_conv2d(32, 64, kernel_size = 3, padding = 1)
+    
+    self$dropout1 <- nn_dropout2d(0.25)
+    self$dropout2 <- nn_dropout(0.5)
+    
+    self$fc1 <- nn_linear(12544, 128)
+    self$fc2 <- nn_linear(128, 10)
+  },
+  
+  forward = function(x) {
+    x %>%                                  # N * 1 * 28 * 28
+      self$conv1() %>%                     # N * 32 * 28 * 28
+      nnf_relu() %>%                       
+      self$conv2() %>%                     # N * 64 * 28 * 28
+      nnf_relu() %>% 
+      nnf_max_pool2d(kernel_size = 2) %>%  # N * 64 * 14 * 14
+      self$dropout1() %>% 
+      torch_flatten(start_dim = 2) %>%     # N * 12544
+      self$fc1() %>%                       # N * 128
+      nnf_relu() %>% 
+      self$dropout2() %>% 
+      self$fc2() %>%                       # N * 10 (logits)
+      { . / self$T }                       # Apply temperature scaling
+  }
+)
+```
+
+
+### Train the Teacher model
+```{r}
+fitted_teacher <- TeacherNet %>%
+  setup(
+    loss = nn_cross_entropy_loss(),
+    optimizer = optim_adam,
+    metrics = list(luz_metric_accuracy())
+  ) %>%
+  set_hparams(T = 3) %>%
+  fit(train_dl, epochs = 5, valid_data = test_dl)
+```
+
+
+### Evaluate the Teacher model
+```{r}
+eval_teacher <- evaluate(fitted_teacher, test_dl)
+acc <- get_metrics(eval_teacher) %>%
+  filter(metric == "acc") %>%
+  pull(value)
+
+cat(sprintf("Test accuracy of teacher model: %.2f%%\n", acc * 100))
+
+num_errors <- (1 - acc) * length(test_ds)
+cat(sprintf("The teacher model achieves %.0f test errors out of %d test cases.\n", 
+            num_errors, length(test_ds)))
+```
+
+
+```{r}
+preds <- predict(fitted_teacher, test_dl)
+pred_classes <- torch_argmax(preds, dim = 2)$to(device = "cpu") %>% as_array()
+
+# Dataframe to compare truth and predictions
+pred_df <- tibble(
+  id = 1:length(test_ds),
+  true = test_ds$targets,
+  pred = pred_classes
+) %>% mutate(true = true - 1,
+             pred = pred - 1) # Convert 1-10 to 0-9
+```
+
+```{r}
+# All the wrong predictions
+wrong_pred <- pred_df %>% filter(true != pred)
+head(wrong_pred)
+```
+
+
+### Save the Teacher model
+```{r}
+luz_save(fitted_teacher, here("model/mnist-cnn-teacher.pt"))
+```
+
