@@ -1,5 +1,5 @@
 ---
-title: "BIOS694 Final Project - KD (Alpha = 0.7)"
+title: "BIOS694 Final Project - KD (Alpha = 1)"
 output: pdf_document
 date: "2025-04-17"
 ---
@@ -171,14 +171,14 @@ match_count # 988/1000 hard and soft targets match
 ```
 
 
-### KD Attempt 1: Train the Student model with Alpha = 0.7
+### KD Attempt 3: Train the Student model with Alpha = 1
 ```{r}
 student_kd <- StudentNet()$to(device = "cpu")
 optimizer <- optim_adam(student_kd$parameters)
 
 epochs <- 3
 Temp <- 3
-alpha <- 0.7
+alpha <- 1
 ```
 
 ```{r}
@@ -252,7 +252,7 @@ cat(sprintf("Teacher accuracy on the test set: %.2f%%\n",
 ```
 
 ```{r}
-torch_save(student_kd, here("model/mnist-student-kd-0.7.pt"))
+torch_save(student_kd, here("model/mnist-student-kd-1.pt"))
 ```
 
 
