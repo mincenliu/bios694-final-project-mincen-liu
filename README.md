@@ -25,3 +25,44 @@ This project explores **knowledge distillation (KD)**—a model compression tech
 *Note:* The MNIST dataset will be automatically downloaded by the scripts when running the RMarkdown files.
 
 ---
+
+## 📌 Project Objectives
+
+- Summarize and reproduce the results of Hinton et al. (2015) using MNIST.
+- Investigate how softmax temperature scaling affects output distributions.
+- Train student models with various α values in the KD loss:
+  
+  \[
+  \mathcal{L} = \alpha \cdot \mathcal{L}_{\text{CE}} + (1 - \alpha) \cdot \mathcal{L}_{\text{KL}}
+  \]
+
+- Evaluate the trade-off between learning from hard targets (true labels) and soft targets (teacher output probabilities).
+
+---
+
+## 🧠 Models
+
+- **TeacherNet**: CNN with ~1.63M parameters; trained with temperature \( T = 3 \).
+- **StudentNet**: Compact CNN with ~102K parameters (6.3% of TeacherNet).
+
+---
+
+## 🔬 Experiments
+
+- **KD with fixed temperature (T = 3)** and α ∈ {0, 0.3, 0.7, 1}.
+- **Temperature scaling** on softmax output with T ∈ {1, 3, 10}.
+- **Evaluation metric**: Test set accuracy.
+
+### 📈 Results
+
+| α value | Description                  | Accuracy (%) |
+|--------:|------------------------------|--------------|
+| 0.0     | Only soft targets            | 98.10        |
+| 0.3     | Small weight on hard targets | **98.34**    |
+| 0.7     | Large weight on hard targets | 98.11        |
+| 1.0     | Only hard targets (baseline) | 98.00        |
+| —       | Teacher model                | 98.75        |
+
+---
+
+## 🚀 Getting Started
