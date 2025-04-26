@@ -51,6 +51,8 @@ This project explores **knowledge distillation (KD)**—a model compression tech
 - **Temperature scaling** on softmax output with T ∈ {1, 3, 10}.
 - **Evaluation metric**: Test set accuracy.
 
+---
+
 ### 📈 Results
 
 | α value | Description                  | Test Accuracy (%) |
