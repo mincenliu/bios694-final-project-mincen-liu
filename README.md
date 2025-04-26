@@ -32,9 +32,7 @@ This project explores **knowledge distillation (KD)**—a model compression tech
 - Investigate how softmax temperature scaling affects output distributions.
 - Train student models with various α values in the KD loss:
   
-  \(
-  \mathcal{L} = \alpha \cdot \mathcal{L}_{\text{CE}} + (1 - \alpha) \cdot \mathcal{L}_{\text{KL}}
-  \)
+  `L = α · L_CE + (1 − α) · L_KL`
 
 - Evaluate the trade-off between learning from hard targets (true labels) and soft targets (teacher output probabilities).
 
@@ -42,7 +40,7 @@ This project explores **knowledge distillation (KD)**—a model compression tech
 
 ## 🧠 Models
 
-- **TeacherNet**: CNN with ~1.63M parameters; trained with temperature \( T = 3 \).
+- **TeacherNet**: CNN with ~1.63M parameters; trained with temperature ( T = 3 ).
 - **StudentNet**: Compact CNN with ~102K parameters (6.3% of TeacherNet).
 
 ---
@@ -66,21 +64,23 @@ This project explores **knowledge distillation (KD)**—a model compression tech
 ---
 
 ## 🚀 Getting Started
-1. **Clone or download the repo**
+
+1. **Clone or download the repo**  
    git clone https://github.com/mincenliu/bios694-final-project-mincen-liu.git
 
-2. **Open R and install dependencies**
-install.packages("torch")
-install.packages("torchvision")
-install.packages("luz")
-install.packages("reshape2")
-install.packages("ggplot2")
-install.packages("dplyr")
-install.packages("tibble")
-install.packages("caret")
-install.packages("here")
+2. **Open R and install dependencies**  
+    install.packages("torch")
+    install.packages("torchvision")
+    install.packages("luz")
+    install.packages("reshape2")
+    install.packages("ggplot2")
+    install.packages("dplyr")
+    install.packages("tibble")
+    install.packages("caret")
+    install.packages("here")
 
-3. **Run the scripts Open any of the .Rmd files to reproduce the KD experiments or plots.**
+3. **Run the scripts**  
+    Open any of the .Rmd files to reproduce the KD experiments or plots.
 
 ---
 
