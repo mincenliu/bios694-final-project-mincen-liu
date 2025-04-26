@@ -2,9 +2,9 @@
  
 This project explores **knowledge distillation (KD)**—a model compression technique that transfers knowledge from a high-capacity teacher model to a smaller student model—using the MNIST handwritten digit classification dataset. All models and experiments were implemented in **R** using the `{torch}`, `{torchvision}`, and `{luz}` packages.
 
-> **Author**: Mincen Liu 
+> **Author**: Mincen Liu  
 > **Institution**: McGill University  
-> **Date**: April 2025
+> **Date**: April 2025  
 
 ---
 
@@ -32,9 +32,9 @@ This project explores **knowledge distillation (KD)**—a model compression tech
 - Investigate how softmax temperature scaling affects output distributions.
 - Train student models with various α values in the KD loss:
   
-  \[
+  \(
   \mathcal{L} = \alpha \cdot \mathcal{L}_{\text{CE}} + (1 - \alpha) \cdot \mathcal{L}_{\text{KL}}
-  \]
+  \)
 
 - Evaluate the trade-off between learning from hard targets (true labels) and soft targets (teacher output probabilities).
 
@@ -55,14 +55,49 @@ This project explores **knowledge distillation (KD)**—a model compression tech
 
 ### 📈 Results
 
-| α value | Description                  | Accuracy (%) |
-|--------:|------------------------------|--------------|
-| 0.0     | Only soft targets            | 98.10        |
-| 0.3     | Small weight on hard targets | **98.34**    |
-| 0.7     | Large weight on hard targets | 98.11        |
-| 1.0     | Only hard targets (baseline) | 98.00        |
-| —       | Teacher model                | 98.75        |
+| α value | Description                  | Test Accuracy (%) |
+|--------:|------------------------------|-------------------|
+| 0.0     | Only soft targets            | 98.10             |
+| 0.3     | Small weight on hard targets | **98.34**         |
+| 0.7     | Large weight on hard targets | 98.11             |
+| 1.0     | Only hard targets (baseline) | 98.00             |
+| —       | Teacher model                | 98.75             |
 
 ---
 
 ## 🚀 Getting Started
+1. **Clone or download the repo**
+   git clone https://github.com/mincenliu/bios694-final-project-mincen-liu.git
+
+2. **Open R and install dependencies**
+install.packages("torch")
+install.packages("torchvision")
+install.packages("luz")
+install.packages("reshape2")
+install.packages("ggplot2")
+install.packages("dplyr")
+install.packages("tibble")
+install.packages("caret")
+install.packages("here")
+
+3. **Run the scripts Open any of the .Rmd files to reproduce the KD experiments or plots.**
+
+---
+
+## 📚 References
+
+```
+Hinton et al. (2015). Distilling the Knowledge in a Neural Network. arXiv:1503.02531
+Menon et al. (2021). A Statistical Perspective on Distillation. ICML
+```
+---
+
+## 🔧 Future Work
+
+```
+Compare R vs Python implementations of KD.
+
+Extend to more complex datasets.
+
+Explore feature-based or attention-based distillation techniques.
+```
