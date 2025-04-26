@@ -71,15 +71,17 @@ This project explores **knowledge distillation (KD)**—a model compression tech
    git clone https://github.com/mincenliu/bios694-final-project-mincen-liu.git
 
 2. **Open R and install dependencies**  
-    install.packages("torch")
-    install.packages("torchvision")
-    install.packages("luz")
-    install.packages("reshape2")
-    install.packages("ggplot2")
-    install.packages("dplyr")
-    install.packages("tibble")
-    install.packages("caret")
-    install.packages("here")
+    ```
+    install.packages("torch")  
+    install.packages("torchvision")  
+    install.packages("luz")  
+    install.packages("reshape2")  
+    install.packages("ggplot2")  
+    install.packages("dplyr")  
+    install.packages("tibble")  
+    install.packages("caret")  
+    install.packages("here")  
+    ```
 
 3. **Run the scripts**  
     Open any of the .Rmd files to reproduce the KD experiments or plots.
