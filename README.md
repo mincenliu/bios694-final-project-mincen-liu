@@ -10,8 +10,8 @@ This project explores **knowledge distillation (KD)**—a model compression tech
 
 ## 📂 Repository Structure
 
-├── model/                                          # Saved .pt models
-│   ├── mnist-cnn-teacher.pt                            # Teacher model (T = 3)
+├── model/                                          # Saved .pt models  
+│   ├── mnist-cnn-teacher.pt                            # Teacher model (T = 3)  
 │   ├── mnist-student-kd-{α}.pt                         # Student models trained with KD (α = 0, 0.3, 0.7, 1)
 │   ├── mnist-cnn-studentT.pt                           # Models trained without KD to illustrate temperature scaling (T = 1, 3, 10)
 ├── output/                                         # Rendered PDF reports
